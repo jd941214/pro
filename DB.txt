@@ -1,0 +1,135 @@
+
+
+create table member (
+member_no number primary key, 
+name varchar2(20) not null, 
+id varchar2(15) not null, 
+passwd varchar2(10) not null, 
+ssn1 varchar2(6) not null, 
+ssn2 varchar2(7) not null, 
+email varchar2(50), 
+hp1 varchar2(4), 
+hp2 varchar2(4),
+hp3 varchar2(4),
+position number default 3 check (position in(0,1,2,3)),
+sex number default 0, 
+point number, 
+joindate varchar2(20) 
+);
+create sequence member_seq;
+---------------------버스-------------------------------------------------
+
+create table bus_station(
+station_no number primary key, 
+station_name varchar2(20) not null, 
+address varchar2(20) 
+);
+create sequence bus_station_seq;
+
+
+create table bus(
+bus_no number primary key,
+grade varchar2(20), 
+seat number
+);
+create sequence bus_seq;
+
+
+
+create table bus_road(
+road_no number primary key, 
+bus_no number references bus(bus_no) unique, 
+station_no number references bus_station(station_no) unique, 
+member_no number references member (member_no) on delete cascade, 
+arrival number references bus_station(station_no), 
+departure number references bus_station(station_no),
+price number,
+arr_time number, 
+tot_time number
+);
+create sequence bus_road_seq;
+
+
+
+create table bus_resv(
+resv_no number primary key,
+member_no number references member (member_no) on delete cascade ,
+bus_no number references bus (bus_no),
+road_no number references bus_road (road_no) ,
+seat number, 
+use_point number, 
+save_point number(10), 
+resv_date varchar2(20)
+ );
+create sequence bus_resv_seq;
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+--------------------호텔-----------------------------------------------------------------------------------------------------------------------
+create table hotel(
+hotel_no number primary key,
+name varchar2(10),
+address varchar2(20),
+hp1 number(4),
+hp2 number(4),
+hp3 number(4),
+member_num number references member (member_no) on delete cascade ,
+hotel_info varchar2(2000),
+star number,
+filename varchar2(50), 
+filesize number
+);
+create sequence bus_resv_seq;
+
+create table room(
+room_no number primary key,
+hotel_no number references hotel(hotel_no) on delete cascade, 
+name varchar2(10),
+size number,
+sleeps number,
+item varchar2(1000),
+filename varchar2(20), 
+filesize number(10)
+);
+
+create sequence room_seq;
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+------------------게시판----------------------------------------------------------------------------------------------------------------------
+create table main_board(
+board_no number primary key,
+member_no number references member(member_no), 
+location_no number check(location_no in(0,1,2,3,4,5,6,7,8)), 
+readcount number, 
+filename varchar2(20), 
+filesize number, 
+content varchar2(3000), 
+reg_date varchar2(20),
+re_group number,
+re_step number, 
+re_level number 
+);                                                  
+create main_board_seq;
+
+create table hotel_board(
+hotel_board number primary key,
+member_no number references member(member_no), 
+hotel_no number references hotel(hotel_no), 
+readcount number,
+filename varchar2(20), 
+filesize number(10), 
+content varchar2(3000), 
+reg_date varchar2(20),
+re_group number, 
+re_step number,
+re_level number 
+);
+create hotel_board_seq;
+
+
+
